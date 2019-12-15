@@ -98,17 +98,17 @@
 
 #### 2.1 关联远程库
 
-##### &nbsp;&nbsp; Github添加远程库
+##### &nbsp;&nbsp; 1) Github添加远程库
 
 * github创建新仓库: 右上角找到“Create a new repo”按钮
 
-##### &nbsp;&nbsp; 关联github远程库
+##### &nbsp;&nbsp; 2) 关联github远程库
 
 * ```
   git remote add origin git@github.com:nano-cat/learngit.git
   ```
 
-##### &nbsp;&nbsp; 推送到远程
+##### &nbsp;&nbsp; 3) 推送到远程
 
 * 第一次:
   * ```
@@ -126,56 +126,87 @@
   git clone git@github.com:nano-cat/learngit.git
   ```
 
+#### 2.3 使用gitee(码云)
+
+##### &nbsp;&nbsp;1) 删除github关联
+
+```
+git remote rm origin (之前关联的名称是origin)
+```
+
+##### &nbsp;&nbsp;2) 关联码云远程库
+
+```
+git remote add gitee git@gitee.com:nano-cat/learngit.git
+```
+
+* 远程库叫`gitee` 以及不叫`origin` 了
+
+##### &nbsp;&nbsp;3) 重新关联Github远程库
+
+```
+git remote add github git@github.com:nano-cat/learngit.git
+```
+
+##### &nbsp;&nbsp;4) 推送
+
+```
+git push gitee master
+git push github master
+```
+
+* 这样我们本地库可以与多个远程库互相同步
+
 ### 3. Git分支管理
 
 #### 3.1 创建与合并分支
 
-* 创建分支
+#####  &nbsp;&nbsp;1) 创建分支
+
+```
+git checkout -b dev
+```
+
+* 相当于`$ git branch dev`(创建分支) + `git checkout dev`(切换) 
+
+##### &nbsp;&nbsp;2) 查看当前分支
+
+```
+git branch
+```
+
+##### &nbsp;&nbsp;3) 切换回`master`分支
+
+```
+git checkout master
+```
+
+* Git 提供了新的命令切换分支
 
   ```
-  git checkout -b dev
+  git switch master
+  git switch -c dev //创建并切换
   ```
 
-  * 相当于`$ git branch dev`(创建分支) + `git checkout dev`(切换) 
+##### &nbsp;&nbsp;4) 合并分支
 
-* 查看当前分支
+```
+git merge dev (尽量用--no-ff方式合并)
+```
 
-  ```
-  git branch
-  ```
+* `git merge`命令用于合并指定分支到当前分支
 
-* 切换回`master`分支
+##### &nbsp;&nbsp;5) 删除`dev`分支
 
-  ```
-  git checkout master
-  ```
+```
+git branch -d dev
+```
 
-  * Git 提供了新的命令切换分支
+##### &nbsp;&nbsp;6) 强制删除未合并分支
 
-    ```
-    git switch master
-    git switch -c dev //创建并切换
-    ```
-
-* 合并分支
-
-  ```
-  git merge dev (尽量用--no-ff方式合并)
-  ```
-
-  * `git merge`命令用于合并指定分支到当前分支
-
-* 删除`dev`分支
-
-  ```
-  git branch -d dev
-  ```
-  
-  * 强制删除未合并分支
-  
-    ```
-    git branch -D dev
-    ```
+```
+git branch -D dev
+```
 
 #### 3.2 合并冲突
 
@@ -209,100 +240,142 @@
 
 #### 3.4 Bug分支
 
-* **"存储"**当前工作区(储存后当前工作区变为最近一次commit时的)
+##### &nbsp;&nbsp;**1) "存储"**当前工作区
 
+* 储存后当前工作区变为最近一次commit时的
+
+```
+git stash
+```
+
+* 切换到有bug 的分支
+* 当修改完其他分支的bug后, 回到此前分支
+
+##### &nbsp;&nbsp;2) 查看`stash`的工作区
+
+```
+git stash list
+```
+
+##### &nbsp;&nbsp;3) 恢复工作区
+
+* 恢复并删除
   ```
-  git stash
+  git stash pop
   ```
 
-  * 切换到有bug 的分支
-  * 当修改完其他分支的bug后, 回到此前分支
-
-* 查看`stash`的工作区
-
-  ```
-  git stash list
-  ```
-
-* 恢复工作区
-  * 恢复并删除
-    ```
-    git stash pop
-    ```
-  
-  * 恢复`git stash apply` , 删除`git stash drop` 
+* 恢复`git stash apply` , 删除`git stash drop` 
 
 #### 3.5 多人协作
 
-* 查看远程库信息
+##### &nbsp;&nbsp;1) 查看远程库信息
+
+```
+git remote -v
+```
+
+##### &nbsp;&nbsp;2) 推送分支
+
+*  (分支是否推送看情况而定)
+
+```
+git push origin master (主分支)
+git push origin dev    (开发分支)
+```
+
+##### &nbsp;&nbsp;3) 创建远程`origin`的`dev`分支到本地
+
+```
+git checkout -b dev origin/dev
+```
+
+##### &nbsp;&nbsp;4) 推送冲突(推送失败)
+
+* 拉取最新提交(有对应的本地分支)
 
   ```
-  git remote -v
+  git pull
   ```
 
-* 推送分支 (分支是否推送看情况而定)
+* 指定本地`dev`分支与远程`origin/dev`分支的链接(无对应)
 
   ```
-  git push origin master (主分支)
-  git push origin dev    (开发分支)
+  git branch --set-upstream-to=origin/dev dev
   ```
 
-* 创建远程`origin`的`dev`分支到本地
-
-  ```
-  git checkout -b dev origin/dev
-  ```
-
-* 推送冲突(推送失败)
-
-  * 拉取最新提交(有对应的本地分支)
-
-    ```
-    git pull
-    ```
-
-  * 指定本地`dev`分支与远程`origin/dev`分支的链接(无对应)
-
-    ```
-    git branch --set-upstream-to=origin/dev dev
-    ```
-
-    解决完冲突后`git push origin dev`
+  解决完冲突后`git push origin dev`
 
 ### 4. 标签
 
 #### 4.1 创建标签
 
-* 切换到需要打标签的分支
+##### &nbsp;&nbsp;1) 切换到需要打标签的分支
+
+```
+git checkout master
+```
+
+##### &nbsp;&nbsp;2) 打一个新标签(打在最新提交的commit上)
+
+```
+git tag v1.0
+```
+
+##### &nbsp;&nbsp;3) 查看所有标签
+
+```
+git tag
+```
+
+##### &nbsp;&nbsp;4) 补打标签
+
+* 找到历史提交的commit id
 
   ```
-  git checkout master
+  git log --pretty=oneline --abbrev-commit
   ```
 
-* 打一个新标签(打在最新提交的commit上)
+* 打上对应的标签
 
   ```
-  git tag v1.0
+  git tag v0.9 c652d7c
   ```
 
-* 查看所有标签
-
-  ```
-  git tag
-  ```
-
-* 补打标签
-
-  * 找到历史提交的commit id
-
+  * 创建带说明的标签
+  
     ```
-    git log --pretty=oneline --abbrev-commit
+    git tag -a v0.9 -m "version 0.9 released" c652d7c
     ```
 
-  * 打上对应的标签
+##### &nbsp;&nbsp;5) 查看标签信息
 
-    ```
-    git tag v0.9 
-    ```
+```
+git show v0.9
+```
 
-    
+##### &nbsp;&nbsp;6) 删除标签
+
+```
+git tag -d v0.9
+```
+
+##### &nbsp;&nbsp;7) 删除远程标签
+
+```
+git tag -d v0.9 (先删除本地标签)
+git push origin :refs/tags/v0.9 (后push)
+```
+
+##### &nbsp;&nbsp;8) 推送标签到远程
+
+* 推送某个标签
+
+  ```
+  git push origin v1.0
+  ```
+
+* 一次性推送全部未推送到远程的标签
+
+  ```
+  git push origin --tags
+  ```
