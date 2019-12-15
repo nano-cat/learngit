@@ -138,6 +138,12 @@
 
   * 相当于`$ git branch dev`(创建分支) + `git checkout dev`(切换) 
 
+* 查看当前分支
+
+  ```
+  git branch
+  ```
+
 * 切换回`master`分支
 
   ```
@@ -154,7 +160,7 @@
 * 合并分支
 
   ```
-  git merge dev
+  git merge dev (尽量用--no-ff方式合并)
   ```
 
   * `git merge`命令用于合并指定分支到当前分支
@@ -164,6 +170,12 @@
   ```
   git branch -d dev
   ```
+  
+  * 强制删除未合并分支
+  
+    ```
+    git branch -D dev
+    ```
 
 #### 3.2 合并冲突
 
@@ -197,3 +209,100 @@
 
 #### 3.4 Bug分支
 
+* **"存储"**当前工作区(储存后当前工作区变为最近一次commit时的)
+
+  ```
+  git stash
+  ```
+
+  * 切换到有bug 的分支
+  * 当修改完其他分支的bug后, 回到此前分支
+
+* 查看`stash`的工作区
+
+  ```
+  git stash list
+  ```
+
+* 恢复工作区
+  * 恢复并删除
+    ```
+    git stash pop
+    ```
+  
+  * 恢复`git stash apply` , 删除`git stash drop` 
+
+#### 3.5 多人协作
+
+* 查看远程库信息
+
+  ```
+  git remote -v
+  ```
+
+* 推送分支 (分支是否推送看情况而定)
+
+  ```
+  git push origin master (主分支)
+  git push origin dev    (开发分支)
+  ```
+
+* 创建远程`origin`的`dev`分支到本地
+
+  ```
+  git checkout -b dev origin/dev
+  ```
+
+* 推送冲突(推送失败)
+
+  * 拉取最新提交(有对应的本地分支)
+
+    ```
+    git pull
+    ```
+
+  * 指定本地`dev`分支与远程`origin/dev`分支的链接(无对应)
+
+    ```
+    git branch --set-upstream-to=origin/dev dev
+    ```
+
+    解决完冲突后`git push origin dev`
+
+### 4. 标签
+
+#### 4.1 创建标签
+
+* 切换到需要打标签的分支
+
+  ```
+  git checkout master
+  ```
+
+* 打一个新标签(打在最新提交的commit上)
+
+  ```
+  git tag v1.0
+  ```
+
+* 查看所有标签
+
+  ```
+  git tag
+  ```
+
+* 补打标签
+
+  * 找到历史提交的commit id
+
+    ```
+    git log --pretty=oneline --abbrev-commit
+    ```
+
+  * 打上对应的标签
+
+    ```
+    git tag v0.9 
+    ```
+
+    
